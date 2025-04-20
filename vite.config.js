@@ -7,9 +7,9 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['icon-192.png', 'icon-512.png'],
       manifestFilename: 'manifest.json',
+      registerType: 'autoUpdate',
+      includeAssets: ['icon-192.png', 'icon-512.png', 'icon-180.png'],
       manifest: {
         name: 'Моят план',
         short_name: 'План',
@@ -20,17 +20,25 @@ export default defineConfig({
         theme_color: '#a1e3b1',
         icons: [
           {
-            src: '/icon-192.png',
+            src: '/my-shopping-app/icon-192.png',
             sizes: '192x192',
-            type: 'image/png',
+            type: 'image/png'
           },
           {
-            src: '/icon-512.png',
+            src: '/my-shopping-app/icon-512.png',
             sizes: '512x512',
-            type: 'image/png',
+            type: 'image/png'
+          },
+          {
+            src: '/my-shopping-app/icon-180.png',
+            sizes: '180x180',
+            type: 'image/png'
           }
         ]
       }
     })
-  ]
+  ],
+  build: {
+    sourcemap: true
+  }
 })

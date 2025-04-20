@@ -1,6 +1,6 @@
 {
   "name": "Моят план",
-  "short_name": "План",
+  "short_name": "Органайзер",
   "start_url": "/my-shopping-app/",
   "scope": "/my-shopping-app/",
   "display": "standalone",
