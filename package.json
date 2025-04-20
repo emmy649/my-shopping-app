@@ -1,8 +1,8 @@
 {
   "name": "my-shopping-app",
+  "homepage": "https://emmy649.github.io/my-shopping-app/",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://emmy649.github.io/my-shopping-app",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
