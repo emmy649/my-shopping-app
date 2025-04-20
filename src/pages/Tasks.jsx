@@ -35,24 +35,6 @@ export default function Tasks() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
 
-  useEffect(() => {
-    if ('Notification' in window && Notification.permission !== 'granted') {
-      Notification.requestPermission();
-    }
-
-    const uncompletedTomorrowTasks = tasks.filter(
-      (t) => isSameDay(new Date(t.date), tomorrow) && !t.done
-    );
-
-    if (uncompletedTomorrowTasks.length > 0 && Notification.permission === 'granted') {
-      const lines = uncompletedTomorrowTasks.map((t) => `• ${t.text}`).join('\n');
-
-      new Notification('Задачи за утре:', {
-        body: lines,
-      });
-    }
-  }, [tasks]);
-
   const getBgColor = (taskDate, done) => {
     if (done) return 'bg-green-100';
     const tDate = new Date(taskDate);
@@ -78,24 +60,20 @@ export default function Tasks() {
       );
       setEditId(null);
     } else {
-      const newTask = {
-        id: Date.now(),
-        text,
-        date,
-        done: false,
-      };
-      setTasks([newTask, ...tasks]);
+      setTasks([
+        {
+          id: Date.now(),
+          text,
+          date,
+          done: false,
+        },
+        ...tasks,
+      ]);
     }
 
     setText('');
     setDate('');
     setShowModal(false);
-  };
-
-  const toggleDone = (id) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
-    );
   };
 
   const handleEdit = (task) => {
@@ -109,137 +87,107 @@ export default function Tasks() {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const renderTaskGroup = (title, taskList) => (
-    <div className="mb-6">
-      {taskList.length > 0 && (
-        <>
-          <h3 className="text-sm text-gray-600 mb-2">{title}</h3>
-          <ul className="flex flex-col gap-2">
-            {taskList.map((task) => (
-              <li
-                key={task.id}
-                className={`flex flex-col gap-1 rounded-lg px-3 py-2 shadow-sm ${getBgColor(
-                  task.date,
-                  task.done
-                )}`}
-              >
-                <div className="text-xs text-gray-500">{formatDateText(task.date)}</div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={task.done}
-                      onChange={() => toggleDone(task.id)}
-                    />
-                    <span
-                      className={`text-sm ${
-                        task.done ? 'line-through text-gray-400' : ''
-                      }`}
-                    >
-                      {task.text}
-                    </span>
-                  </div>
-                  <div className="flex gap-2 text-sm">
-                    <button
-                      onClick={() => handleEdit(task)}
-                      className="text-gray-500 hover:text-gray-700"
-                      title="Редактирай"
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      onClick={() => handleDelete(task.id)}
-                      className="text-red-400 hover:text-red-600"
-                      title="Изтрий"
-                    >
-                      Х
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-    </div>
-  );
+  const toggleDone = (id) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
+    );
+  };
 
   return (
-    <div className="relative min-h-screen p-4 pb-24 max-w-md mx-auto">
-      {/* Бутон назад */}
+    <div className="relative min-h-[100dvh] p-4 pb-24 max-w-md mx-auto">
       <Link
         to="/"
         className="fixed top-4 right-4 w-10 h-10 rounded-full bg-white shadow-md hover:shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 transition z-50"
-        title="Обратно към началото"
+        title="Обратно към началната страница"
       >
         ←
       </Link>
 
-      <h2 className="text-xl font italic text-center mb-4">Какво имаш да правиш...</h2>
-         <div className="flex flex-wrap justify-center gap-4 mb-4 text-xs text-gray-600">
-            <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-gray-100"></span>
-              За днес
-         </div>
-            <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-rose-100"></span>
-             За утре
-         </div>
-            <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-yellow-100"></span>
-              След 2–3 дни
-         </div>
-            <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-blue-100"></span>
-              По-нататък
-         </div>
-            <div className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-full bg-green-100"></span>
-               Изпълнена
-        </div>
+      <h2 className="text-xl font italic text-center mb-6">Твоите задачи</h2>
+
+      <div className="text-xs text-gray-500 flex flex-wrap justify-center gap-2 mb-4">
+        <span className="px-2 py-1 rounded bg-gray-100">Днес</span>
+        <span className="px-2 py-1 rounded bg-rose-100">Утре</span>
+        <span className="px-2 py-1 rounded bg-yellow-100">Скоро</span>
+        <span className="px-2 py-1 rounded bg-blue-100">По-нататък</span>
+        <span className="px-2 py-1 rounded bg-green-100">✔️ Готово</span>
       </div>
 
+      {Object.entries(groupedTasks).map(([key, list]) => (
+        <div key={key} className="mb-6">
+          {list.map((task) => (
+            <div
+              key={task.id}
+              className={`rounded-lg shadow-sm px-4 py-3 mb-2 text-sm ${getBgColor(
+                task.date,
+                task.done
+              )}`}
+            >
+              <div className="flex justify-between items-center">
+                <div className="flex flex-col">
+                  <span
+                    className={`font-medium ${
+                      task.done ? 'line-through text-green-600' : 'text-gray-800'
+                    }`}
+                  >
+                    {task.text}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {formatDateText(task.date)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={task.done}
+                    onChange={() => toggleDone(task.id)}
+                  />
+                  <button
+                    onClick={() => handleEdit(task)}
+                    className="text-xs text-blue-500 hover:underline"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    onClick={() => handleDelete(task.id)}
+                    className="text-xs text-red-500 hover:underline"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
 
-      {renderTaskGroup('За днес', groupedTasks.today)}
-      {renderTaskGroup('За утре', groupedTasks.tomorrow)}
-      {renderTaskGroup('Предстоящи', groupedTasks.future)}
-
-      {/* Плаващ бутон */}
       <button
-        onClick={() => {
-          setText('');
-          setDate('');
-          setEditId(null);
-          setShowModal(true);
-        }}
-        className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-blue-300 text-white shadow-lg hover:bg-blue-400 transition flex items-center justify-center text-3xl"
+        onClick={() => setShowModal(true)}
+        className="fixed bottom-6 right-6 bg-purple-500 text-white rounded-full w-12 h-12 text-xl shadow-lg hover:bg-purple-600 z-50"
+        title="Нова задача"
       >
-        +
+        ＋
       </button>
 
-      {/* Модален прозорец */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-lg p-6 w-80">
-            <h3 className="text-lg font-semibold mb-4 text-center">
-              {editId ? 'Редакция на задача' : 'Нова задача'}
+        <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-2xl shadow-2xl w-[90%] max-w-md animate-in fade-in scale-95 duration-200">
+            <h3 className="text-center text-lg font-semibold mb-4">
+              {editId ? 'Редактирай задача' : 'Нова задача'}
             </h3>
-
             <input
               type="text"
-              placeholder="Опиши задачата..."
               value={text}
               onChange={(e) => setText(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm mb-4"
+              placeholder="Въведи задача..."
+              className="w-full border rounded-lg px-3 py-2 text-sm mb-3"
             />
-
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className="w-full border rounded-lg px-3 py-2 text-sm mb-4"
             />
-
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => {
@@ -254,7 +202,7 @@ export default function Tasks() {
               </button>
               <button
                 onClick={handleSave}
-                className="text-sm px-4 py-2 rounded-lg bg-blue-400 text-white hover:bg-blue-500"
+                className="text-sm px-4 py-2 rounded-lg bg-purple-400 text-white hover:bg-purple-500"
               >
                 Запази
               </button>

@@ -17,8 +17,8 @@ export default function ModalViewDay({ date, events, onClose, onDelete }) {
     .sort((a, b) => a.time.localeCompare(b.time));
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-lg p-6 w-96 max-h-[80vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 w-[90%] max-w-md max-h-[80vh] overflow-y-auto animate-fade-in scale-95 animate-in duration-200 ease-out">
         <h3 className="text-lg font-semibold mb-4 text-center">
           Срещи за {formatDateLong(date)}
         </h3>

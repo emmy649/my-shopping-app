@@ -62,8 +62,7 @@ export default function Notes() {
   };
 
   return (
-    <div className="relative min-h-screen p-4 pb-24 max-w-md mx-auto">
-      {/* Бутон назад */}
+    <div className="relative min-h-[100dvh] p-4 pb-24 max-w-md mx-auto">
       <Link
         to="/"
         className="fixed top-4 right-4 w-10 h-10 rounded-full bg-white shadow-md hover:shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 transition z-50"
@@ -78,54 +77,48 @@ export default function Notes() {
         {notes.map((note) => (
           <div
             key={note.id}
-            className={`rounded-xl shadow p-4 ${note.color} flex flex-col gap-2`}
+            className={`p-4 rounded-xl shadow-md text-sm leading-relaxed break-words whitespace-pre-wrap ${note.color}`}
           >
-            <div className="text-xs text-gray-500">{note.date}</div>
-            <div className="text-sm text-gray-800 whitespace-pre-line">{note.text}</div>
-            <div className="flex justify-end gap-2 text-sm mt-1">
+            <div className="text-xs text-gray-500 mb-2">{note.date}</div>
+            <div className="text-gray-800">{note.text}</div>
+            <div className="flex justify-end mt-3 gap-2 text-xs">
               <button
                 onClick={() => handleEdit(note)}
-                className="text-gray-500 hover:text-gray-700"
-                title="Редактирай"
+                className="text-blue-500 hover:underline"
               >
-                ✏️
+                ✏️ Редактирай
               </button>
               <button
                 onClick={() => handleDelete(note.id)}
-                className="text-red-400 hover:text-red-600"
-                title="Изтрий"
+                className="text-red-500 hover:underline"
               >
-                Х
+                🗑️ Изтрий
               </button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Плаващ бутон */}
+      {/* Floating button */}
       <button
-        onClick={() => {
-          setText('');
-          setEditId(null);
-          setShowModal(true);
-        }}
-        className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-blue-300 text-white shadow-lg hover:bg-blue-400 transition flex items-center justify-center text-3xl"
+        onClick={() => setShowModal(true)}
+        className="fixed bottom-6 right-6 bg-purple-500 text-white rounded-full w-12 h-12 text-xl shadow-lg hover:bg-purple-600 z-50"
+        title="Нова бележка"
       >
-        +
+        ＋
       </button>
 
-      {/* Модален прозорец */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-lg p-6 w-80">
-            <h3 className="text-lg font-semibold mb-4 text-center">
-              {editId ? 'Редакция на бележка' : 'Нова бележка'}
+        <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-2xl shadow-2xl w-[90%] max-w-md animate-in fade-in scale-95 duration-200">
+            <h3 className="text-center text-lg font-semibold mb-4">
+              {editId ? 'Редактирай бележка' : 'Нова бележка'}
             </h3>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Въведи бележка..."
-              rows={5}
+              placeholder="Напиши нещо..."
+              rows={4}
               className="w-full border rounded-lg px-3 py-2 text-sm mb-4"
             />
             <div className="flex justify-end gap-2">
@@ -141,7 +134,7 @@ export default function Notes() {
               </button>
               <button
                 onClick={handleSave}
-                className="text-sm px-4 py-2 rounded-lg bg-blue-400 text-white hover:bg-blue-500"
+                className="text-sm px-4 py-2 rounded-lg bg-purple-400 text-white hover:bg-purple-500"
               >
                 Запази
               </button>

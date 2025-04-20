@@ -21,7 +21,7 @@ const getMonthDays = (year, month) => {
   }
 
   for (let d = 1; d <= lastDayOfMonth.getDate(); d++) {
-    const fixedDate = new Date(year, month, d, 12); // 12:00 фиксация
+    const fixedDate = new Date(year, month, d, 12);
     days.push(fixedDate);
   }
 
@@ -76,40 +76,37 @@ export default function CalendarMonth({
             return (
               <div
                 key={`empty-${index}`}
-                className="bg-transparent h-[90px] min-w-0"
+                className="bg-transparent min-w-[40px] aspect-square"
               ></div>
             );
           }
 
-          const iso = day.toISOString().split('T')[0];
-          const dailyEvents = events.filter((e) => e.date === iso);
+          const dateStr = day.toISOString().split('T')[0];
+          const dayEvents = events.filter(e => e.date === dateStr);
+          const isSelected = selectedDate === dateStr;
 
           return (
             <div
-              key={iso}
+              key={dateStr}
+              className={`rounded-md p-1 overflow-hidden text-xs border cursor-pointer flex flex-col justify-start items-start min-w-[40px] aspect-square ${isSelected ? 'bg-yellow-100 border-yellow-400' : 'bg-gray-50 hover:bg-gray-100'}`}
               onClick={() => {
-                setSelectedDate(iso);
+                setSelectedDate(dateStr);
                 openViewModal();
               }}
-              className="relative bg-white border rounded-md shadow-sm hover:shadow-md transition cursor-pointer p-2 h-[90px] min-w-0 flex flex-col justify-between"
             >
-              <div className="absolute top-1 right-2 text-xs text-gray-400">
+              <div className="font-semibold text-gray-700 text-xs mb-1">
                 {formatDateShort(day)}
               </div>
-
-              <div className="flex flex-wrap gap-1 mt-6">
-                {dailyEvents.slice(0, 3).map((e) => (
-                  <span
-                    key={e.id}
-                    className={`w-3 h-3 rounded-full ${getBgColor(e.category)}`}
-                    title={e.title}
-                  ></span>
+              <div className="flex flex-col gap-0.5 w-full">
+                {dayEvents.map((ev, i) => (
+                  <div
+                    key={i}
+                    className={`w-full rounded text-[10px] px-1 truncate ${getBgColor(ev.category)}`}
+                    title={ev.title}
+                  >
+                    {ev.title}
+                  </div>
                 ))}
-                {dailyEvents.length > 3 && (
-                  <span className="text-xs text-gray-500 ml-1">
-                    +{dailyEvents.length - 3}
-                  </span>
-                )}
               </div>
             </div>
           );

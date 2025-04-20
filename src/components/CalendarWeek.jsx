@@ -63,7 +63,9 @@ export default function CalendarWeek({
         >
           ←
         </button>
-        <span className="text-base font-semibold">{formatWeekLabel()}</span>
+        <span className="text-base font-semibold text-center">
+          {formatWeekLabel()}
+        </span>
         <button
           onClick={goToNextWeek}
           className="text-lg px-3 py-1 rounded-full hover:bg-gray-100"
@@ -72,32 +74,35 @@ export default function CalendarWeek({
         </button>
       </div>
 
-      {/* Седем хоризонтални дни */}
+      {/* Седем вертикални дни */}
       {weekDates.map((date) => {
         const dayEvents = events.filter((e) => e.date === date);
+        const isSelected = selectedDate === date;
 
         return (
           <div
             key={date}
+            className={`rounded-lg border p-3 w-full shadow-sm bg-white cursor-pointer hover:bg-gray-50 transition-all ${isSelected ? 'border-yellow-400 bg-yellow-50' : ''}`}
             onClick={() => {
               setSelectedDate(date);
               openViewModal();
             }}
-            className="bg-white rounded-md shadow-sm hover:shadow-md transition cursor-pointer p-4 flex items-center justify-between border"
           >
-            <div className="text-sm font-medium text-gray-700">
+            <div className="text-sm font-semibold text-gray-700 mb-2">
               {formatDate(date)}
             </div>
-            <div className="flex gap-2">
-              {dayEvents.slice(0, 3).map((e) => (
-                <span
-                  key={e.id}
-                  className={`w-3 h-3 rounded-full ${getBgColor(e.category)}`}
-                  title={e.title}
-                ></span>
+            <div className="flex flex-col gap-1">
+              {dayEvents.map((ev, i) => (
+                <div
+                  key={i}
+                  className={`rounded px-2 py-0.5 text-[12px] truncate ${getBgColor(ev.category)}`}
+                  title={ev.title}
+                >
+                  {ev.title}
+                </div>
               ))}
-              {dayEvents.length > 3 && (
-                <span className="text-xs text-gray-500">+{dayEvents.length - 3}</span>
+              {dayEvents.length === 0 && (
+                <span className="text-gray-300 italic text-xs">няма събития</span>
               )}
             </div>
           </div>

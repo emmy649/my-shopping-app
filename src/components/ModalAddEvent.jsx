@@ -20,11 +20,10 @@ export default function ModalAddEvent({ date, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-lg p-6 w-80">
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 w-[90%] max-w-md animate-fade-in scale-95 animate-in duration-200 ease-out">
         <h3 className="text-lg font-semibold mb-4 text-center">Нова среща</h3>
 
-        {/* Поле за дата */}
         <input
           type="date"
           value={selectedDate}
