@@ -16,10 +16,11 @@ function App() {
             <Route
               path="/"
               element={
-                <div className="flex flex-col items-center justify-center min-h-[100dvh] gap-16">
-                  <h1 className="text-2xl font-[cursive] text-center">
-                    Здравей, Еми!
+                <div className="flex flex-col items-center justify-start min-h-[100dvh] gap-6 pt-12">
+                  <h1 className="text-2xl font-bold italic font-[cursive] text-center">
+                      Здравей, Еми!
                   </h1>
+
 
                   <div className="flex flex-wrap justify-center gap-6 mt-4">
                     <NavItem

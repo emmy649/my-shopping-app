@@ -24,6 +24,7 @@ export default function Notes() {
   const [showModal, setShowModal] = useState(false);
   const [text, setText] = useState('');
   const [editId, setEditId] = useState(null);
+  const [expandedNote, setExpandedNote] = useState(null);
 
   useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(notes));
@@ -61,6 +62,10 @@ export default function Notes() {
     setNotes((prev) => prev.filter((n) => n.id !== id));
   };
 
+  const toggleExpand = (id) => {
+    setExpandedNote(expandedNote === id ? null : id);
+  };
+
   return (
     <div className="relative min-h-[100dvh] p-4 pb-24 max-w-md mx-auto">
       <Link
@@ -74,29 +79,45 @@ export default function Notes() {
       <h2 className="text-xl font italic text-center mb-10">Какво ще си запишеш... </h2>
 
       <div className="flex flex-col gap-4">
-        {notes.map((note) => (
-          <div
-            key={note.id}
-            className={`p-4 rounded-xl shadow-md text-sm leading-relaxed break-words whitespace-pre-wrap ${note.color}`}
-          >
-            <div className="text-xs text-gray-500 mb-2">{note.date}</div>
-            <div className="text-gray-800">{note.text}</div>
-            <div className="flex justify-end mt-3 gap-2 text-xs">
-              <button
-                onClick={() => handleEdit(note)}
-                className="text-blue-500 hover:underline"
-              >
-                ✏️ Редактирай
-              </button>
-              <button
-                onClick={() => handleDelete(note.id)}
-                className="text-red-500 hover:underline"
-              >
-                🗑️ Изтрий
-              </button>
+        {notes.map((note) => {
+          const isLong = note.text.length > 200;
+          const isExpanded = expandedNote === note.id;
+          return (
+            <div
+              key={note.id}
+              className={`p-4 rounded-xl text-sm break-words whitespace-pre-wrap ${note.color}`}
+            >
+              <div className="text-xs text-gray-500 mb-2">{note.date}</div>
+              <div className="text-gray-800 leading-relaxed">
+                {isLong && !isExpanded
+                  ? note.text.slice(0, 200) + '...'
+                  : note.text}
+              </div>
+              {isLong && (
+                <button
+                  onClick={() => toggleExpand(note.id)}
+                  className="text-xs text-blue-500 hover:underline mt-1"
+                >
+                  {isExpanded ? 'Скрий' : 'Покажи повече'}
+                </button>
+              )}
+              <div className="flex justify-end mt-3 gap-2 text-xs">
+                <button
+                  onClick={() => handleEdit(note)}
+                  className="text-blue-500 hover:underline"
+                >
+                  ✏️ Редактирай
+                </button>
+                <button
+                  onClick={() => handleDelete(note.id)}
+                  className="text-red-500 hover:underline"
+                >
+                  🗑️ Изтрий
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Floating button */}

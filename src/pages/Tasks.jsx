@@ -33,6 +33,18 @@ export default function Tasks() {
 
   useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
+
+    const tomorrowTasks = tasks.filter(t => {
+      const d = new Date(t.date);
+      return isSameDay(d, tomorrow) && !t.done;
+    });
+
+    if (tomorrowTasks.length > 0 && !localStorage.getItem('notified')) {
+      alert(`Утре имаш ${tomorrowTasks.length} задачи!`);
+      localStorage.setItem('notified', 'true');
+    } else if (tomorrowTasks.length === 0) {
+      localStorage.removeItem('notified');
+    }
   }, [tasks]);
 
   const getBgColor = (taskDate, done) => {
@@ -118,13 +130,18 @@ export default function Tasks() {
           {list.map((task) => (
             <div
               key={task.id}
-              className={`rounded-lg shadow-sm px-4 py-3 mb-2 text-sm ${getBgColor(
+              className={`rounded-lg px-4 py-3 mb-2 text-sm ${getBgColor(
                 task.date,
                 task.done
               )}`}
             >
-              <div className="flex justify-between items-center">
-                <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={task.done}
+                  onChange={() => toggleDone(task.id)}
+                />
+                <div className="flex flex-col flex-1">
                   <span
                     className={`font-medium ${
                       task.done ? 'line-through text-green-600' : 'text-gray-800'
@@ -137,11 +154,6 @@ export default function Tasks() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={task.done}
-                    onChange={() => toggleDone(task.id)}
-                  />
                   <button
                     onClick={() => handleEdit(task)}
                     className="text-xs text-blue-500 hover:underline"
