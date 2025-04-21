@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import Purchases from './pages/Purchases';
@@ -8,6 +8,20 @@ import Tasks from './pages/Tasks';
 import Schedule from './pages/Schedule';
 
 function App() {
+  const [greeting, setGreeting] = useState('');
+  const [showGreeting, setShowGreeting] = useState(false);
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 5) setGreeting('Спокойна нощ, Еми 🌙');
+    else if (hour < 12) setGreeting('Добро утро, Еми ☀️');
+    else if (hour < 18) setGreeting('Прекрасен ден, Еми 🌼');
+    else setGreeting('Хубава вечер, Еми ❣️');
+
+    const timeout = setTimeout(() => setShowGreeting(true), 300);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <Router>
       <div className="min-h-[100dvh] bg-gradient-to-br from-green-100 via-rose-50 to-white text-gray-700 p-4 font-sans">
@@ -16,11 +30,17 @@ function App() {
             <Route
               path="/"
               element={
-                <div className="flex flex-col items-center justify-start min-h-[100dvh] gap-28 pt-14">
+                <div className="flex flex-col items-center justify-start min-h-[100dvh] gap-20 pt-20">
                   <h1 className="text-2xl font-bold italic font-[cursive] text-center">
-                      Здравей, Еми!
+                    Здравей, 
                   </h1>
-
+                  <p
+                    className={`text-lg text-gray-500 italic mt-2 transition-opacity [2000ms]ease-in-out ${
+                      showGreeting ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  >
+                    {greeting}
+                  </p>
 
                   <div className="flex flex-wrap justify-center gap-6 mt-4">
                     <NavItem
@@ -34,6 +54,11 @@ function App() {
                       label="График"
                     />
                     <NavItem
+                      to="/notes"
+                      iconPath={`${import.meta.env.BASE_URL}icons/note.svg`}
+                      label="Бележки"
+                    />
+                    <NavItem
                       to="/purchases"
                       iconPath={`${import.meta.env.BASE_URL}icons/shopping-bag.svg`}
                       label="Покупки"
@@ -42,11 +67,6 @@ function App() {
                       to="/monthly"
                       iconPath={`${import.meta.env.BASE_URL}icons/calendar.svg`}
                       label="Месечни покупки"
-                    />
-                    <NavItem
-                      to="/notes"
-                      iconPath={`${import.meta.env.BASE_URL}icons/note.svg`}
-                      label="Бележки"
                     />
                   </div>
                 </div>
