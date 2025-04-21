@@ -24,8 +24,8 @@ function App() {
 
   return (
     <Router>
-     <div className="min-h-[100dvh] bg-gradient-to-br from-green-100 via-rose-50 to-white text-gray-700 p-4 font-sans">
-        <div className="max-w-screen-sm mx-auto px-4">
+      <div className="min-h-[100dvh] bg-gradient-to-br from-green-100 via-rose-50 to-white text-gray-700 p-4 font-sans">
+        <div className="max-w-md mx-auto px-2">
           <Routes>
             <Route
               path="/"
