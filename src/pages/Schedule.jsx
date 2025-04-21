@@ -85,7 +85,8 @@ export default function Schedule() {
   };
 
   return (
-    <div className="relative min-h-[100dvh] p-4 max-w-full sm:max-w-3xl lg:max-w-5xl mx-auto">
+    <div className="relative min-h-[100dvh] max-w-screen-sm mx-auto px-4 py-4">
+
       <Link
         to="/"
         className="fixed top-4 right-4 w-10 h-10 rounded-full bg-white shadow-md hover:shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 transition z-50"

@@ -48,21 +48,24 @@ export default function ModalAddEvent({ onClose, onAdd, date }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
-        <h3 className="text-lg font-bold mb-4 text-center">Нова среща</h3>
+    <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-2xl shadow-2xl w-[90%] max-w-md animate-in fade-in scale-95 duration-200">
+        <h3 className="text-center text-lg font-semibold mb-4">
+          Нова среща
+        </h3>
+
         <input
           type="text"
           placeholder="Заглавие"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full border rounded px-3 py-2 mb-2"
+          className="w-full border rounded-lg px-3 py-2 text-sm mb-2"
         />
 
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full border rounded px-3 py-2 mb-2"
+          className="w-full border rounded-lg px-3 py-2 text-sm mb-4"
         >
           <option>Общи</option>
           <option>Работа</option>
@@ -71,46 +74,38 @@ export default function ModalAddEvent({ onClose, onAdd, date }) {
           <option>Специални</option>
         </select>
 
-        <div className="flex gap-2 mb-2">
-          <div className="flex-1">
-            <label className="text-sm">От дата</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="w-full border rounded px-2 py-1"
-            />
-          </div>
-          <div className="flex-1">
-            <label className="text-sm">Час</label>
-            <input
-              type="time"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              className="w-full border rounded px-2 py-1"
-            />
-          </div>
+        <div className="mb-3">
+          <label className="text-sm block">От дата</label>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 text-sm mb-2"
+          />
+          <label className="text-sm block">Час от</label>
+          <input
+            type="time"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 text-sm"
+          />
         </div>
 
-        <div className="flex gap-2 mb-2">
-          <div className="flex-1">
-            <label className="text-sm">До дата</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="w-full border rounded px-2 py-1"
-            />
-          </div>
-          <div className="flex-1">
-            <label className="text-sm">Час</label>
-            <input
-              type="time"
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              className="w-full border rounded px-2 py-1"
-            />
-          </div>
+        <div className="mb-3">
+          <label className="text-sm block">До дата</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 text-sm mb-2"
+          />
+          <label className="text-sm block">Час до</label>
+          <input
+            type="time"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+            className="w-full border rounded-lg px-3 py-2 text-sm"
+          />
         </div>
 
         <input
@@ -118,26 +113,26 @@ export default function ModalAddEvent({ onClose, onAdd, date }) {
           placeholder="Място (по избор)"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="w-full border rounded px-3 py-2 mb-2"
+          className="w-full border rounded-lg px-3 py-2 text-sm mb-2"
         />
 
         <textarea
           placeholder="Описание (по избор)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full border rounded px-3 py-2 mb-4"
+          className="w-full border rounded-lg px-3 py-2 text-sm mb-4"
         ></textarea>
 
-        <div className="flex justify-between">
+        <div className="flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+            className="text-sm px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200"
           >
             Отказ
           </button>
           <button
             onClick={handleAdd}
-            className="bg-purple-400 text-white px-4 py-2 rounded hover:bg-purple-500"
+            className="text-sm px-4 py-2 rounded-lg bg-purple-400 text-white hover:bg-purple-500"
           >
             Запази
           </button>

@@ -105,7 +105,7 @@ export default function CalendarMonth({
               }}
               className={`min-h-[80px] sm:min-h-[90px] p-1 flex flex-col text-[12px] sm:text-sm border border-gray-50 relative transition-all cursor-pointer rounded-md
                 ${isCurrent ? 'bg-white hover:bg-yellow-50' : 'bg-white text-transparent pointer-events-none'}
-                ${cell.dateStr === selectedDate && isCurrent ? 'bg-yellow-50' : ''}
+                ${cell.dateStr === selectedDate && isCurrent ? 'bg-yellow-' : ''}
                 ${isToday(cell.day, cell.month, cell.year) ? 'ring-2 ring-yellow-100' : ''}`}
             >
               <div className={`text-right text-[11px] sm:text-xs font-semibold ${isCurrent ? 'text-gray-700' : 'text-transparent'}`}>
