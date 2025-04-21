@@ -31,11 +31,11 @@ function App() {
               path="/"
               element={
                 <div className="flex flex-col items-center justify-start min-h-[100dvh] gap-20 pt-20">
-                  <h1 className="text-2xl font-bold italic font-[cursive] text-center">
-                    Здравей, 
+                  <h1 className="text-3xl font-extrabold italic font-[cursive] text-center">
+                    Здравей,
                   </h1>
                   <p
-                    className={`text-lg text-gray-500 italic mt-2 transition-opacity [2000ms]ease-in-out ${
+                    className={`text-lg text-gray-500 italic mt-2 transition-opacity duration-[2000ms] ease-in-out ${
                       showGreeting ? 'opacity-100' : 'opacity-0'
                     }`}
                   >
