@@ -118,7 +118,7 @@ export default function Tasks() {
         ←
       </Link>
 
-      <h2 className="text-xl font italic text-center mb-6">Твоите задачи</h2>
+      <h2 className="text-xl font italic text-center mb-6">Моите задачи</h2>
 
       <div className="text-xs text-gray-500 flex flex-wrap justify-center gap-2 mb-4">
         <span className="px-2 py-1 rounded bg-gray-100">Днес</span>
@@ -178,7 +178,7 @@ export default function Tasks() {
 
       <button
         onClick={() => setShowModal(true)}
-        className="fixed bottom-6 right-6 bg-purple-500 text-white rounded-full w-12 h-12 text-xl shadow-lg hover:bg-purple-600 z-50"
+        className="fixed bottom-6 right-6 bg-purple-400 text-white rounded-full w-12 h-12 text-xl shadow-lg hover:bg-purple-600 z-50"
         title="Нова задача"
       >
         ＋

@@ -67,6 +67,23 @@ export default function Schedule() {
     setWeekStartDate(next);
   };
 
+  const handleAdd = (event) => {
+    setEvents((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        title: event.title || '',
+        category: event.category || 'Общи',
+        startDate: event.startDate || '',
+        endDate: event.endDate || '',
+        startTime: event.startTime || '',
+        endTime: event.endTime || '',
+        location: event.location || '',
+        description: event.description || '',
+      },
+    ]);
+  };
+
   return (
     <div className="relative min-h-[100dvh] p-4 max-w-full sm:max-w-3xl lg:max-w-5xl mx-auto">
       <Link
@@ -77,21 +94,21 @@ export default function Schedule() {
         ←
       </Link>
 
-      <h2 className="text-xl font italic text-center mb-4">График</h2>
+      
 
       <CalendarLegend />
-         <CalendarHeader
-           view={view}
-           setView={setView}
-            onToday={() => {
-            const now = new Date();
-            now.setHours(12, 0, 0, 0);
-            setSelectedDate(now.toISOString().split('T')[0]);
-            setCurrentYear(now.getFullYear());
-            setCurrentMonth(now.getMonth());
-            setWeekStartDate(now);
-             }}
-            />
+      <CalendarHeader
+        view={view}
+        setView={setView}
+        onToday={() => {
+          const now = new Date();
+          now.setHours(12, 0, 0, 0);
+          setSelectedDate(now.toISOString().split('T')[0]);
+          setCurrentYear(now.getFullYear());
+          setCurrentMonth(now.getMonth());
+          setWeekStartDate(now);
+        }}
+      />
 
       {view === 'week' ? (
         <CalendarWeek
@@ -127,10 +144,7 @@ export default function Schedule() {
         <ModalAddEvent
           date={selectedDate}
           onClose={() => setShowAddModal(false)}
-          onSave={(newEvent) => {
-            setEvents([...events, newEvent]);
-            setShowAddModal(false);
-          }}
+          onAdd={handleAdd}
         />
       )}
 

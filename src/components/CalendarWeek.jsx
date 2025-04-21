@@ -1,12 +1,21 @@
 import React from 'react';
 
-const getBgColor = (category) => {
-  switch (category) {
-    case 'work': return 'bg-blue-200';
-    case 'personal': return 'bg-pink-200';
-    case 'home': return 'bg-green-200';
-    case 'special': return 'bg-purple-200';
-    default: return 'bg-gray-200';
+const getBgColor = (category = '') => {
+  switch (category.toLowerCase()) {
+    case 'work':
+    case 'работа':
+      return 'bg-blue-100';
+    case 'personal':
+    case 'лични':
+      return 'bg-pink-100';
+    case 'home':
+    case 'домашни':
+      return 'bg-green-100';
+    case 'special':
+    case 'специални':
+      return 'bg-purple-100';
+    default:
+      return 'bg-gray-100';
   }
 };
 
@@ -76,13 +85,18 @@ export default function CalendarWeek({
 
       {/* Седем вертикални дни */}
       {weekDates.map((date) => {
-        const dayEvents = events.filter((e) => e.date === date);
+        const dayEvents = events.filter((e) => {
+          const start = e.startDate ? new Date(e.startDate).toISOString().split('T')[0] : '';
+          const end = e.endDate ? new Date(e.endDate).toISOString().split('T')[0] : start;
+          return date >= start && date <= end;
+        });
+
         const isSelected = selectedDate === date;
 
         return (
           <div
             key={date}
-            className={`rounded-lg border p-3 w-full shadow-sm bg-white cursor-pointer hover:bg-gray-50 transition-all ${isSelected ? 'border-yellow-400 bg-yellow-50' : ''}`}
+            className={`rounded-lg border p-3 w-full shadow-sm bg-white cursor-pointer hover:bg-gray-50 transition-all ${isSelected ? 'border-yellow-100 bg-yellow-50' : ''}`}
             onClick={() => {
               setSelectedDate(date);
               openViewModal();
