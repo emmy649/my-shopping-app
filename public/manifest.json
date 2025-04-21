@@ -6,7 +6,7 @@
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
-  "theme_color": "#a1e3b1",
+  "theme_color": "bg-white",
   "icons": [
   {
     "src": "/my-shopping-app/icon-192.png",

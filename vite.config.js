@@ -12,12 +12,12 @@ export default defineConfig({
       includeAssets: ['icon-192.png', 'icon-512.png', 'icon-180.png'],
       manifest: {
         name: 'Моят план',
-        short_name: 'План',
+        short_name: 'Органайзер',
         start_url: '/my-shopping-app/',
         scope: '/my-shopping-app/',
         display: 'standalone',
         background_color: '#ffffff',
-        theme_color: '#a1e3b1',
+        theme_color: 'bg-white',
         icons: [
           {
             src: '/my-shopping-app/icon-192.png',

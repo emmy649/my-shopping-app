@@ -35,7 +35,7 @@ function App() {
                     Здравей,
                   </h1>
                   <p
-                    className={`text-cm text-gray-500 font-[cursive] mt-2 transition-opacity duration-[2000ms] ease-in-out ${
+                    className={`text-xl text-gray-500 font-[cursive] mt-2 transition-opacity duration-[2000ms] ease-in-out ${
                       showGreeting ? 'opacity-100' : 'opacity-0'
                     }`}
                   >
