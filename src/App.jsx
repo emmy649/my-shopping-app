@@ -10,13 +10,13 @@ import Schedule from './pages/Schedule';
 function App() {
   return (
     <Router>
-      <div className="min-h-[100dvh] bg-gradient-to-br from-rose-50 via-green-50 to-white text-gray-700 p-4 font-sans">
+      <div className="min-h-[100dvh] bg-gradient-to-br from-green-100 via-rose-50 to-white text-gray-700 p-4 font-sans">
         <div className="max-w-md mx-auto px-2">
           <Routes>
             <Route
               path="/"
               element={
-                <div className="flex flex-col items-center justify-start min-h-[100dvh] gap-6 pt-12">
+                <div className="flex flex-col items-center justify-start min-h-[100dvh] gap-28 pt-14">
                   <h1 className="text-2xl font-bold italic font-[cursive] text-center">
                       Здравей, Еми!
                   </h1>
@@ -70,7 +70,7 @@ function NavItem({ to, iconPath, label }) {
     <div className="flex flex-col items-center gap-2 text-center w-24">
       <Link
         to={to}
-        className="w-24 h-24 rounded-xl bg-white shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center"
+        className="w-24 h-20 rounded-xl bg-white shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center"
       >
         <img
           src={iconPath}

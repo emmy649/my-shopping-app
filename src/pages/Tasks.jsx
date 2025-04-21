@@ -32,20 +32,23 @@ export default function Tasks() {
   tomorrow.setDate(today.getDate() + 1);
 
   useEffect(() => {
+    // Запазваме задачите в localStorage
     localStorage.setItem('tasks', JSON.stringify(tasks));
-
+  
+    // Филтрираме задачите за утре, които още не са изпълнени
     const tomorrowTasks = tasks.filter(t => {
       const d = new Date(t.date);
       return isSameDay(d, tomorrow) && !t.done;
     });
-
-    if (tomorrowTasks.length > 0 && !localStorage.getItem('notified')) {
-      alert(`Утре имаш ${tomorrowTasks.length} задачи!`);
-      localStorage.setItem('notified', 'true');
-    } else if (tomorrowTasks.length === 0) {
-      localStorage.removeItem('notified');
+  
+    // Ако има такива задачи, показваме съобщение с текстовете
+    if (tomorrowTasks.length > 0) {
+      const taskList = tomorrowTasks.map((t, i) => `${i + 1}. ${t.text}`).join('\n');
+      alert(`Утре имаш ${tomorrowTasks.length} задачи:\n\n${taskList}`);
     }
   }, [tasks]);
+  
+  
 
   const getBgColor = (taskDate, done) => {
     if (done) return 'bg-green-100';
