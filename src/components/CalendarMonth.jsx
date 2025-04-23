@@ -1,79 +1,65 @@
 import React from 'react';
 
-const getBgColor = (category = '') => {
-  switch (category.toLowerCase()) {
-    case 'work':
-    case 'работа':
-      return 'bg-blue-100';
-    case 'personal':
-    case 'лични':
-      return 'bg-pink-100';
-    case 'home':
-    case 'домашни':
-      return 'bg-green-100';
-    case 'special':
-    case 'специални':
-      return 'bg-purple-100';
-    default:
-      return 'bg-gray-200';
+const getBgColor = (category) => {
+  switch (category) {
+    case 'work': return 'bg-blue-200';
+    case 'personal': return 'bg-pink-200';
+    case 'home': return 'bg-green-200';
+    case 'special': return 'bg-purple-200';
+    default: return 'bg-gray-200';
   }
 };
+
+const getMonthDays = (year, month) => {
+  const days = [];
+  const firstDayOfMonth = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
+  const firstWeekDay = firstDayOfMonth.getDay() || 7;
+
+  for (let i = 1; i < firstWeekDay; i++) {
+    days.push(null);
+  }
+
+  for (let d = 1; d <= lastDayOfMonth.getDate(); d++) {
+    const fixedDate = new Date(year, month, d, 12); // 12:00 фиксация
+    days.push(fixedDate);
+  }
+
+  return days;
+};
+
+const formatDateShort = (date) =>
+  date.toLocaleDateString('bg-BG', { day: '2-digit', month: '2-digit' });
+
+const monthNames = [
+  'Януари', 'Февруари', 'Март', 'Април', 'Май', 'Юни',
+  'Юли', 'Август', 'Септември', 'Октомври', 'Ноември', 'Декември'
+];
 
 export default function CalendarMonth({
   events,
   selectedDate,
   setSelectedDate,
   openViewModal,
-  currentMonth,
   currentYear,
+  currentMonth,
   goToPreviousMonth,
   goToNextMonth,
 }) {
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-  const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1;
-  const totalCells = Math.ceil((adjustedFirstDay + daysInMonth) / 7) * 7;
-
-  const weeks = [];
-  let day = 1 - adjustedFirstDay;
-
-  for (let i = 0; i < totalCells / 7; i++) {
-    const week = [];
-    for (let j = 0; j < 7; j++) {
-      const d = new Date(currentYear, currentMonth, day);
-      d.setHours(12, 0, 0, 0);
-      const dateStr = d.toISOString().split('T')[0];
-      const eventsForDay = events.filter((e) => {
-        const start = e.startDate ? new Date(e.startDate).toISOString().split('T')[0] : '';
-        const end = e.endDate ? new Date(e.endDate).toISOString().split('T')[0] : start;
-        return dateStr >= start && dateStr <= end;
-      });
-      week.push({ day: d.getDate(), month: d.getMonth(), year: d.getFullYear(), dateStr, events: eventsForDay });
-      day++;
-    }
-    weeks.push(week);
-  }
-
-  const isToday = (d, m, y) => {
-    const today = new Date();
-    return d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
-  };
+  const days = getMonthDays(currentYear, currentMonth);
 
   return (
-    <div className="w-full mt-2 p-1 border border-gray-100 rounded-xl shadow-inner bg-white">
+    <div className="p-3 border rounded-xl shadow bg-white w-full">
       {/* Навигация */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <button
           onClick={goToPreviousMonth}
           className="text-lg px-3 py-1 rounded-full hover:bg-gray-100"
         >
           ←
         </button>
-        <span className="text-base font-semibold text-center">
-          {new Date(currentYear, currentMonth).toLocaleDateString('bg-BG', {
-            month: 'long',
-            year: 'numeric',
-          })}
+        <span className="text-base font-semibold">
+          {monthNames[currentMonth]} {currentYear}
         </span>
         <button
           onClick={goToNextMonth}
@@ -83,44 +69,47 @@ export default function CalendarMonth({
         </button>
       </div>
 
-      {/* Заглавия на дните */}
-      <div className="grid grid-cols-7 text-center text-xs text-gray-500 mb-2">
-        {['Пон', 'Вт', 'Ср', 'Чет', 'Пет', 'Съб', 'Нед'].map((d) => (
-          <div key={d}>{d}</div>
-        ))}
-      </div>
+      {/* Календар */}
+      <div className="grid grid-cols-7 gap-2 w-full">
+        {days.map((day, index) => {
+          if (!day) {
+            return (
+              <div
+                key={`empty-${index}`}
+                className="bg-transparent h-[90px] min-w-0"
+              ></div>
+            );
+          }
 
-      {/* Клетки */}
-      <div className="grid grid-cols-7 gap-1 p-1 bg-white rounded-xl">
-        {weeks.flat().map((cell, index) => {
-          const isCurrent = cell.month === currentMonth && cell.year === currentYear;
+          const iso = day.toISOString().split('T')[0];
+          const dailyEvents = events.filter((e) => e.date === iso);
+
           return (
             <div
-              key={index}
+              key={iso}
               onClick={() => {
-                if (isCurrent) {
-                  setSelectedDate(cell.dateStr);
-                  openViewModal();
-                }
+                setSelectedDate(iso);
+                openViewModal();
               }}
-              className={`min-h-[80px] sm:min-h-[90px] p-1 flex flex-col text-[12px] sm:text-sm border border-gray-50 relative transition-all cursor-pointer rounded-md
-                ${isCurrent ? 'bg-white hover:bg-yellow-50' : 'bg-white text-transparent pointer-events-none'}
-                ${cell.dateStr === selectedDate && isCurrent ? 'bg-yellow-' : ''}
-                ${isToday(cell.day, cell.month, cell.year) ? 'ring-2 ring-yellow-100' : ''}`}
+              className="relative bg-white border rounded-md shadow-sm hover:shadow-md transition cursor-pointer p-2 h-[90px] min-w-0 flex flex-col justify-between"
             >
-              <div className={`text-right text-[11px] sm:text-xs font-semibold ${isCurrent ? 'text-gray-700' : 'text-transparent'}`}>
-                {cell.day}
+              <div className="absolute top-1 right-2 text-xs text-gray-400">
+                {formatDateShort(day)}
               </div>
-              <div className="flex flex-col gap-0.5 mt-1">
-                {cell.events.map((ev, i) => (
-                  <div
-                    key={i}
-                    className={`truncate text-[11px] px-1 rounded ${getBgColor(ev.category)}`}
-                    title={ev.title}
-                  >
-                    {ev.title}
-                  </div>
+
+              <div className="flex flex-wrap gap-1 mt-6">
+                {dailyEvents.slice(0, 3).map((e) => (
+                  <span
+                    key={e.id}
+                    className={`w-3 h-3 rounded-full ${getBgColor(e.category)}`}
+                    title={e.title}
+                  ></span>
                 ))}
+                {dailyEvents.length > 3 && (
+                  <span className="text-xs text-gray-500 ml-1">
+                    +{dailyEvents.length - 3}
+                  </span>
+                )}
               </div>
             </div>
           );

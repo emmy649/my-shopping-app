@@ -67,8 +67,26 @@ export default function Schedule() {
     setWeekStartDate(next);
   };
 
+  const handleAdd = (event) => {
+    setEvents((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        title: event.title || '',
+        category: event.category || 'Общи',
+        startDate: event.startDate || '',
+        endDate: event.endDate || '',
+        startTime: event.startTime || '',
+        endTime: event.endTime || '',
+        location: event.location || '',
+        description: event.description || '',
+      },
+    ]);
+  };
+
   return (
-    <div className="relative min-h-screen p-4 max-w-5xl mx-auto">
+    <div className="relative min-h-[100dvh] max-w-screen-sm mx-auto px-4 py-4">
+
       <Link
         to="/"
         className="fixed top-4 right-4 w-10 h-10 rounded-full bg-white shadow-md hover:shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 transition z-50"
@@ -77,21 +95,21 @@ export default function Schedule() {
         ←
       </Link>
 
-      <h2 className="text-xl font italic text-center mb-4">График</h2>
+      
 
       <CalendarLegend />
-         <CalendarHeader
-           view={view}
-           setView={setView}
-            onToday={() => {
-            const now = new Date();
-            now.setHours(12, 0, 0, 0);
-            setSelectedDate(now.toISOString().split('T')[0]);
-            setCurrentYear(now.getFullYear());
-            setCurrentMonth(now.getMonth());
-            setWeekStartDate(now);
-             }}
-            />
+      <CalendarHeader
+        view={view}
+        setView={setView}
+        onToday={() => {
+          const now = new Date();
+          now.setHours(12, 0, 0, 0);
+          setSelectedDate(now.toISOString().split('T')[0]);
+          setCurrentYear(now.getFullYear());
+          setCurrentMonth(now.getMonth());
+          setWeekStartDate(now);
+        }}
+      />
 
       {view === 'week' ? (
         <CalendarWeek
@@ -127,10 +145,7 @@ export default function Schedule() {
         <ModalAddEvent
           date={selectedDate}
           onClose={() => setShowAddModal(false)}
-          onSave={(newEvent) => {
-            setEvents([...events, newEvent]);
-            setShowAddModal(false);
-          }}
+          onAdd={handleAdd}
         />
       )}
 

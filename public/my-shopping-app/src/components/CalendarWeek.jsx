@@ -1,12 +1,21 @@
 import React from 'react';
 
-const getBgColor = (category) => {
-  switch (category) {
-    case 'work': return 'bg-blue-200';
-    case 'personal': return 'bg-pink-200';
-    case 'home': return 'bg-green-200';
-    case 'special': return 'bg-purple-200';
-    default: return 'bg-gray-200';
+const getBgColor = (category = '') => {
+  switch (category.toLowerCase()) {
+    case 'work':
+    case 'работа':
+      return 'bg-blue-100';
+    case 'personal':
+    case 'лични':
+      return 'bg-pink-100';
+    case 'home':
+    case 'домашни':
+      return 'bg-green-100';
+    case 'special':
+    case 'специални':
+      return 'bg-purple-100';
+    default:
+      return 'bg-gray-100';
   }
 };
 
@@ -63,7 +72,9 @@ export default function CalendarWeek({
         >
           ←
         </button>
-        <span className="text-base font-semibold">{formatWeekLabel()}</span>
+        <span className="text-base font-semibold text-center">
+          {formatWeekLabel()}
+        </span>
         <button
           onClick={goToNextWeek}
           className="text-lg px-3 py-1 rounded-full hover:bg-gray-100"
@@ -72,32 +83,40 @@ export default function CalendarWeek({
         </button>
       </div>
 
-      {/* Седем хоризонтални дни */}
+      {/* Седем вертикални дни */}
       {weekDates.map((date) => {
-        const dayEvents = events.filter((e) => e.date === date);
+        const dayEvents = events.filter((e) => {
+          const start = e.startDate ? new Date(e.startDate).toISOString().split('T')[0] : '';
+          const end = e.endDate ? new Date(e.endDate).toISOString().split('T')[0] : start;
+          return date >= start && date <= end;
+        });
+
+        const isSelected = selectedDate === date;
 
         return (
           <div
             key={date}
+            className={`rounded-lg border p-3 w-full shadow-sm bg-white cursor-pointer hover:bg-gray-50 transition-all ${isSelected ? 'border-yellow-100 bg-yellow-50' : ''}`}
             onClick={() => {
               setSelectedDate(date);
               openViewModal();
             }}
-            className="bg-white rounded-md shadow-sm hover:shadow-md transition cursor-pointer p-4 flex items-center justify-between border"
           >
-            <div className="text-sm font-medium text-gray-700">
+            <div className="text-sm font-semibold text-gray-700 mb-2">
               {formatDate(date)}
             </div>
-            <div className="flex gap-2">
-              {dayEvents.slice(0, 3).map((e) => (
-                <span
-                  key={e.id}
-                  className={`w-3 h-3 rounded-full ${getBgColor(e.category)}`}
-                  title={e.title}
-                ></span>
+            <div className="flex flex-col gap-1">
+              {dayEvents.map((ev, i) => (
+                <div
+                  key={i}
+                  className={`rounded px-2 py-0.5 text-[12px] truncate ${getBgColor(ev.category)}`}
+                  title={ev.title}
+                >
+                  {ev.title}
+                </div>
               ))}
-              {dayEvents.length > 3 && (
-                <span className="text-xs text-gray-500">+{dayEvents.length - 3}</span>
+              {dayEvents.length === 0 && (
+                <span className="text-gray-300 italic text-xs">няма събития</span>
               )}
             </div>
           </div>
